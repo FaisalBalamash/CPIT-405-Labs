@@ -1,0 +1,18 @@
+.image-preview img {
+    border-top: 30px solid skyblue;
+    border-right: 30px solid lightpink;
+    border-left: 30px solid #ffefd5;
+    border-bottom: 30px solid lightgreen;
+}
+
+table th, table tr, table td {
+    border-bottom: 1px solid #dbdbdb;
+    text-align: left;
+    padding: 10px;
+
+  }
+
+tr td:first-child{
+    font-weight: 900;
+}
+
