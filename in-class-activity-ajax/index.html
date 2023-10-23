@@ -1,146 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        img {
-            width: 290px;
-            height: 349px;
-            margin: 10px;
-        }
-
-        input {
-            padding: 5px;
-            border: 3px solid #003600;
-        }
-
-        button {
-            padding: 5px;
-        }
-    </style>
-    <script>
-        const clientId = "712645836bdd60b";
-        var defaultAlbumId = 'Jfni3';
-
-        function requestAlbum() {
-            let albumId = document.getElementById("albumIdField").innerText;
-            if(!albumId) {
-                albumId = defaultAlbumId;
-            }
-            var req = new XMLHttpRequest();
-            req.onreadystatechange = function () {
-                if (req.readyState == 4 && req.status == 200) {
-                    processAlbumRequest(req.responseText);
-                }
-                else if (req.readyState == 4 && req.status != 200) {
-                    console.log(req.status + " Error with the imgur API: ", req.responseText);
-                }
-            }
-            req.open('GET', 'https://api.imgur.com/3/album/' + albumId + '/images', true);
-            req.setRequestHeader('Authorization', 'Client-ID ' + clientId);
-            req.send();
-        }
-
-        function processAlbumRequest(response_text) {
-            var respObj = JSON.parse(response_text);
-            for (item of respObj.data.slice(0, 10)){
-                requestImage(item.id);
-            }
-        }
-
-        function requestImage(imageHash) {
-            var req = new XMLHttpRequest();
-            req.onreadystatechange = function () {
-                if (req.readyState == 4 && req.status == 200) {
-                    processImageRequest(req.responseText);
-                }
-                else if (req.readyState == 4 && req.status != 200) {
-                    console.log("Error with the imgur API");
-                }
-            }
-            req.open("GET", "https://api.imgur.com/3/image/" + imageHash, true);
-            req.setRequestHeader('Authorization', 'Client-ID ' + clientId);
-            req.send();
-        }
-
-        function processImageRequest(response_text) {
-            var respObj = JSON.parse(response_text);
-            let imgElem = document.createElement("img");
-            imgElem.src = respObj.data.link;
-            document.body.appendChild(imgElem);
-        }
-
-        // Using Promises
-        async function requestAlbumWithAsyncAwait() {
-    try {
-        let albumId = document.getElementById("albumIdField").value || defaultAlbumId;
-        let response = await fetch('https://api.imgur.com/3/album/' + albumId + '/images', {
-            headers: {
-                'Authorization': 'Client-ID ' + clientId
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        let data = await response.json();
-        for (item of data.data.slice(0, 10)) {
-            await fetchImageWithAsyncAwait(item.id);
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
-
-       // Using async await
-async function fetchImageWithAsyncAwait(imageHash) {
-    try {
-        let response = await fetch("https://api.imgur.com/3/image/" + imageHash, {
-            headers: {
-                'Authorization': 'Client-ID ' + clientId
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        let data = await response.json();
-        let imgElem = document.createElement("img");
-        imgElem.src = data.data.link;
-        document.body.appendChild(imgElem);
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
-
-        async function fetchImageWithAsyncAwait(imageHash) {
-            try {
-                let response = await fetch("https://api.imgur.com/3/image/" + imageHash, {
-                    headers: {
-                        'Authorization': 'Client-ID ' + clientId
-                    }
-                });
-                let data = await response.json();
-                let imgElem = document.createElement("img");
-                imgElem.src = data.data.link;
-                document.body.appendChild(imgElem);
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        }
-
-    </script>
+    <title>Imgur API with Multiple Methods</title>
 </head>
-
 <body>
-    <header>
-        <input id="albumIdField" value="Jfni3" type="text" placeholder="Enter any imgur's album id">
-        <button onclick=requestAlbum()>View Images (XHR)</button>
-        <button onclick=requestAlbumWithPromises()>View Images (Promises)</button>
-        <button onclick=requestAlbumWithAsyncAwait()>View Images (Async/Await)</button>
-    </header>
-</body>
+<header>
+    <input id="searchField" type="text" placeholder="Search Images">
+    <button id="xhrSearch">Search using XHR</button>
+    <button id="fetchSearch">Search using fetch</button>
+    <button id="fetchAsyncAwaitSearch">Search using fetch with async/await</button>
+</header>
+<div id="searchResults"></div>
 
+<script>
+const AUTHORIZATION = "f2a8c487d51e8cb";
+
+let searchText = document.getElementById('searchField');
+let searchResults = document.getElementById("searchResults");
+
+document.getElementById('xhrSearch').addEventListener("click", function (){
+    searchResults.innerHTML = "";
+    searchImgurUsingXHR(searchText.value);
+});
+
+document.getElementById('fetchSearch').addEventListener("click", function (){
+    searchResults.innerHTML = "";
+    searchImgurUsingFetch(searchText.value);
+});
+
+document.getElementById('fetchAsyncAwaitSearch').addEventListener("click", function (){
+    searchResults.innerHTML = "";
+    searchImgurUsingFetchAsyncAwait(searchText.value);
+});
+
+function searchImgurUsingXHR(query) {
+    const url = `https://api.imgur.com/3/gallery/search?q=${query}`;
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("readystatechange", function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            processResponse(JSON.parse(xhr.responseText));
+        }
+    });
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Authorization", AUTHORIZATION);
+    xhr.send();
+}
+
+function searchImgurUsingFetch(query) {
+    const url = `https://api.imgur.com/3/gallery/search?q=${query}`;
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            "Authorization": AUTHORIZATION
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        processResponse(data);
+    })
+    .catch(e => {
+        console.error(e);
+    });
+}
+
+async function searchImgurUsingFetchAsyncAwait(query) {
+    const url = `https://api.imgur.com/3/gallery/search?q=${query}`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                "Authorization": AUTHORIZATION
+            }
+        });
+        const data = await response.json();
+        processResponse(data);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function processResponse(response) {
+    const items = response.data;
+    for (let item of items) {
+        if (item.is_album) continue;
+        const imgElement = document.createElement("img");
+        imgElement.src = item.link;
+        imgElement.alt = item.title || "Imgur Image";
+        searchResults.appendChild(imgElement);
+    }
+}
+</script>
+</body>
 </html>
