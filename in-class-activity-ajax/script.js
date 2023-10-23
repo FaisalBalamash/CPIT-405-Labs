@@ -1,5 +1,5 @@
-const clientId = "1d382e638ddd70e";
-var defaultAlbumId = 'Jfni3';
+const clientId = "a8ff297227497fe";
+var defaultAlbumId = 'cat';
 
 function requestAlbum() {
     let albumId = document.getElementById("albumIdField").innerText;
@@ -15,7 +15,7 @@ function requestAlbum() {
             console.log(req.status + " Error with the imgur API: ", req.responseText);
         }
     }
-    req.open('GET', 'https://api.imgur.com/3/album/' + albumId + '/images', true);   
+    req.open('GET', 'https://api.imgur.com/3/album/' + albumId + '/images', true); // true for asynchronous     
     req.setRequestHeader('Authorization', 'Client-ID ' + clientId);
     req.send();
 }
@@ -50,3 +50,6 @@ function processImageRequest(response_text) {
     //imgElem.referrerpolicy="no-referrer";
     document.body.appendChild(imgElem);
 }
+
+
+
