@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      img {
-        width: 290px;
-        height: 349px;
-        margin: 10px;
-      }
 
-      input {
-        padding: 5px;
-        border: 3px solid #003600;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    img {
+      width: 290px;
+      height: 349px;
+      margin: 10px;
+    }
 
-      button {
-        padding: 5px;
-      }
-    </style>
+    input {
+      padding: 5px;
+      border: 3px solid #003600;
+    }
+
+    button {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <input id="albumIdField" type="text" placeholder="Enter any imgur's album id" />
+    <button onclick="requestAlbum()">View Images with XML</button>
+    <button onclick="requestAlbumwithFetch()">
+      View Images with Promise
+    </button>
+    <button onclick="requestAlbumwithFetchasyncawait()">
+      View Image with Async/Await
+    </button>
+
+
     <script>
       const clientId = "a8ff297227497fe";
       var defaultAlbumId = "Jfni3";
-
+  
       function requestAlbum() {
         var albumId = document.getElementById("albumIdField").value;
         if (!albumId) {
@@ -49,7 +63,7 @@
         req.setRequestHeader("Authorization", "Client-ID " + clientId);
         req.send();
       }
-
+  
       function processAlbumRequest(response_text) {
         var respObj = JSON.parse(response_text);
         for (item of respObj.data.slice(0, 10)) {
@@ -57,7 +71,7 @@
           requestImage(item.id);
         }
       }
-
+  
       function requestImage(imageHash) {
         var req = new XMLHttpRequest();
         req.onreadystatechange = function () {
@@ -71,7 +85,7 @@
         req.setRequestHeader("Authorization", "Client-ID " + clientId);
         req.send();
       }
-
+  
       function processImageRequest(response_text) {
         var respObj = JSON.parse(response_text);
         let imgElem = document.createElement("img");
@@ -79,9 +93,9 @@
         //imgElem.referrerpolicy="no-referrer";
         document.body.appendChild(imgElem);
       }
-
+  
       function requestAlbumwithFetch() {
-        var albumid = document.getElementById("albumIdField").value;
+        var albumId = document.getElementById("albumIdField").value;
         if (!albumId) {
           albumId = defaultAlbumId;
         }
@@ -104,7 +118,7 @@
         req.setRequestHeader("Authorization", "Client-ID " + clientId);
         req.send();
       }
-
+  
       function processAlbumRequestFetch(response_text) {
         var respObj = JSON.parse(response_text);
         for (item of respObj.data.slice(0, 10)) {
@@ -112,7 +126,7 @@
           requestImageFetch(item.id);
         }
       }
-
+  
       function requestImageFetch(imageHash) {
         var req = new XMLHttpRequest();
         req.onreadystatechange = function () {
@@ -126,7 +140,7 @@
         req.setRequestHeader("Authorization", "Client-ID " + clientId);
         req.send();
       }
-
+  
       function processImageRequestFetch(response_text) {
         var respObj = JSON.parse(response_text);
         let imgElem = document.createElement("img");
@@ -135,11 +149,10 @@
         document.body.appendChild(imgElem);
       }
       async function requestAlbumwithFetchasyncawait() {
-        var albumid = document.getElementById("albumIdField").value;
+        var albumId = document.getElementById("albumIdField").value;
         if (!albumId) {
           albumId = defaultAlbumId;
         }
-
         try {
           let response = await fetch(
             "https://api.imgur.com/3/album/" + albumId + "/images",
@@ -150,25 +163,25 @@
               },
             }
           );
-
+  
           if (!response.ok) {
             throw new Error("Error with the imgur API: " + response.statusText);
           }
-
+  
           let data = await response.json();
           processAlbumRequestasyncawait(data);
         } catch (error) {
           console.log(error);
         }
       }
-
+  
       function processAlbumRequestasyncawait(data) {
         for (let item of data.data.slice(0, 10)) {
           console.log(item);
           requestImageasyncawait(item.id);
         }
       }
-
+  
       async function requestImageasyncawait(imageHash) {
         try {
           let response = await fetch(
@@ -180,40 +193,25 @@
               },
             }
           );
-
+  
           if (!response.ok) {
             throw new Error("Error with the imgur API: " + response.statusText);
           }
-
+  
           let data = await response.json();
           processImageRequestasyncawait(data);
         } catch (error) {
           console.log(error);
         }
       }
-
+  
       function processImageRequestasyncawait(data) {
         let imgElem = document.createElement("img");
         imgElem.src = data.data.link;
         document.body.appendChild(imgElem);
       }
     </script>
-  </head>
+  </header>
+</body>
 
-  <body>
-    <header>
-      <input
-        id="albumIdField"
-        type="text"
-        placeholder="Enter any imgur's album id"
-      />
-      <button onclick="requestAlbum()">View Images with XML</button>
-      <button onclick="requestAlbumwithFetch()">
-        View Images with Promise
-      </button>
-      <button onclick="requestAlbumwithFetchasyncawait()">
-        View Image with Async/Await
-      </button>
-    </header>
-  </body>
 </html>
