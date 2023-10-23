@@ -26,7 +26,7 @@
       var defaultAlbumId = "Jfni3";
 
       function requestAlbum() {
-        let albumId = document.getElementById("albumIdField").innerText;
+        var albumId = document.getElementById("albumIdField").value;
         if (!albumId) {
           albumId = defaultAlbumId;
         }
@@ -81,7 +81,7 @@
       }
 
       function requestAlbumwithFetch() {
-        let albumId = document.getElementById("albumIdField").innerText;
+        var albumid = document.getElementById("albumIdField").value;
         if (!albumId) {
           albumId = defaultAlbumId;
         }
@@ -135,7 +135,7 @@
         document.body.appendChild(imgElem);
       }
       async function requestAlbumwithFetchasyncawait() {
-        let albumId = document.getElementById("albumIdField").innerText;
+        var albumid = document.getElementById("albumIdField").value;
         if (!albumId) {
           albumId = defaultAlbumId;
         }
