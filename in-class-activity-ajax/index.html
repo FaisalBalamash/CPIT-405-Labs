@@ -22,8 +22,7 @@
       }
     </style>
     <script>
-      //const clientId = "ca6139e49c5bf36";
-      const clientId = "712645836bdd60b";
+      const clientId = "a8ff297227497fe";
       var defaultAlbumId = "Jfni3";
 
       function requestAlbum() {
@@ -205,13 +204,16 @@
     <header>
       <input
         id="albumIdField"
-        value="Jfni3"
         type="text"
         placeholder="Enter any imgur's album id"
       />
       <button onclick="requestAlbum()">View Images with XML</button>
-      <button onclick="requestAlbumwithFetch()">View Images with Promise</button>
-      <button onclick="requestAlbumwithFetchasyncawait()">View Image with Async/Await</button>
+      <button onclick="requestAlbumwithFetch()">
+        View Images with Promise
+      </button>
+      <button onclick="requestAlbumwithFetchasyncawait()">
+        View Image with Async/Await
+      </button>
     </header>
   </body>
 </html>
