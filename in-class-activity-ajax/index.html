@@ -75,54 +75,45 @@
         }
 
         // Using Promises
-        function requestAlbumWithPromises() {
-            let albumId = document.getElementById("albumIdField").value || defaultAlbumId;
-            fetch('https://api.imgur.com/3/album/' + albumId + '/images', {
-                headers: {
-                    'Authorization': 'Client-ID ' + clientId
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                for (item of data.data.slice(0, 10)) {
-                    fetchImageWithPromises(item.id);
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-
-        function fetchImageWithPromises(imageHash) {
-            fetch("https://api.imgur.com/3/image/" + imageHash, {
-                headers: {
-                    'Authorization': 'Client-ID ' + clientId
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                let imgElem = document.createElement("img");
-                imgElem.src = data.data.link;
-                document.body.appendChild(imgElem);
-            })
-            .catch(error => console.error("Error:", error));
-        }
-
-        // Using Async/Await
         async function requestAlbumWithAsyncAwait() {
-            try {
-                let albumId = document.getElementById("albumIdField").value || defaultAlbumId;
-                let response = await fetch('https://api.imgur.com/3/album/' + albumId + '/images', {
-                    headers: {
-                        'Authorization': 'Client-ID ' + clientId
-                    }
-                });
-                let data = await response.json();
-                for (item of data.data.slice(0, 10)) {
-                    await fetchImageWithAsyncAwait(item.id);
-                }
-            } catch (error) {
-                console.error("Error:", error);
+    try {
+        let albumId = document.getElementById("albumIdField").value || defaultAlbumId;
+        let response = await fetch('https://api.imgur.com/3/album/' + albumId + '/images', {
+            headers: {
+                'Authorization': 'Client-ID ' + clientId
             }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        let data = await response.json();
+        for (item of data.data.slice(0, 10)) {
+            await fetchImageWithAsyncAwait(item.id);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+       // Using async await
+async function fetchImageWithAsyncAwait(imageHash) {
+    try {
+        let response = await fetch("https://api.imgur.com/3/image/" + imageHash, {
+            headers: {
+                'Authorization': 'Client-ID ' + clientId
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        let data = await response.json();
+        let imgElem = document.createElement("img");
+        imgElem.src = data.data.link;
+        document.body.appendChild(imgElem);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
 
         async function fetchImageWithAsyncAwait(imageHash) {
             try {
