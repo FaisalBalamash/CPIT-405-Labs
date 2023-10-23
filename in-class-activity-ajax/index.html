@@ -1,14 +1,148 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-<head> 
- 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <link rel="stylesheet" href="style.css"> 
-    <title>Your Title Here</title> 
-</head> 
-<body> 
-    <h1>Hello, World!</h1> 
-    <script src="script.js"></script> 
-</body> 
-</html> 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img {
+            width: 290px;
+            height: 349px;
+            margin: 10px;
+        }
+
+        input {
+            padding: 5px;
+            border: 3px solid #003600;
+        }
+
+        button {
+            padding: 5px;
+        }
+    </style>
+    <script>
+
+        const clientId = "1d382e638ddd70e";
+        var defaultAlbumId = 'Jfni3';
+
+        function requestAlbumwithXHR() {
+            let albumId = document.getElementById("albumIdField").innerText;
+            if (!albumId) {
+                albumId = defaultAlbumId;
+            }
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState == 4 && req.status == 200) {
+                    processAlbumRequest(req.responseText);
+                }
+                else if (req.readyState == 4 && req.status != 200) {
+                    console.log(req.status + " Error with the imgur API: ", req.responseText);
+                }
+            }
+            req.open('GET', 'https://api.imgur.com/3/album/' + albumId + '/images', true);
+            req.setRequestHeader('Authorization', 'Client-ID ' + clientId);
+            req.send();
+        }
+
+        function processAlbumRequest(response_text) {
+            var respObj = JSON.parse(response_text);
+            for (item of respObj.data.slice(0, 10)) {
+                console.log(item)
+                requestImage(item.id);
+            }
+        }
+
+        function requestAlbumwithPromise() {
+            let albumId = document.getElementById("albumIdField").value;
+            if (!albumId) {
+                albumId = defaultAlbumId;
+            }
+            fetch('https://api.imgur.com/3/album/' + albumId + '/images', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Client-ID ' + clientId
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        console.log('Error with the Imgur API:', response.status, response.statusText);
+                    }
+                })
+                .then(data => {
+                    data.data.slice(0, 10).forEach(item => {
+                        requestImage(item.id);
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        async function requestAlbumWithAsyncAwait() {
+            let albumId = document.getElementById("albumIdField").value;
+            if (!albumId) {
+                albumId = defaultAlbumId;
+            }
+
+            try {
+                const response = await fetch('https://api.imgur.com/3/album/' + albumId + '/images', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Client-ID ' + clientId
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    data.data.slice(0, 10).forEach(item => {
+                        requestImage(item.id);
+                    });
+                } else {
+                    console.log('Error with the Imgur API:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        function requestImage(imageHash) {
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState == 4 && req.status == 200) {
+                    processImageRequest(req.responseText);
+                }
+                else if (req.readyState == 4 && req.status != 200) {
+                    console.log("Error with the imgur API");
+                }
+            }
+            req.open("GET", "https://api.imgur.com/3/image/" + imageHash, true); // true for asynchronous     
+            req.setRequestHeader('Authorization', 'Client-ID ' + clientId);
+            req.send();
+        }
+
+        function processImageRequest(response_text) {
+            var respObj = JSON.parse(response_text);
+            let imgElem = document.createElement("img");
+            imgElem.src = respObj.data.link;
+            //imgElem.referrerpolicy="no-referrer";
+            document.body.appendChild(imgElem);
+        }
+
+    </script>
+</head>
+
+<body>
+    <header>
+        <input id="albumIdField" value="Jfni3" type="text" placeholder="Enter any imgur's album id">
+        <button onclick="requestAlbumwithXHR()">View Images with XHR</button>
+        <button onclick="requestAlbumwithPromise()">View Images with Fetch (Promise)</button>
+        <button onclick="requestAlbumWithAsyncAwait()">View Images with Fetch (Async/Await)</button>
+
+    </header>
+</body>
+
+</html>
