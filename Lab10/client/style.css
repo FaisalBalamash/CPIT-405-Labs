@@ -1,0 +1,90 @@
+:root {
+  --main-font-size: 20px;
+  --main-bg-color: #fff;
+  --button-bg-color: #4CAF50;
+  --button-hover-bg-color: #45A049; 
+  --todo-bg-color: #f9f9f9;
+  --todo-bg-hover-color: #e9e9e9;
+  --error-color: #D32F2F; 
+  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+body {
+  font-size: var(--main-font-size);
+  font-family: var(--font-stack);
+  background-color: var(--main-bg-color);
+  margin: 0;
+  padding: 20px;
+  color: #333; 
+}
+
+@media only screen and (max-width: 320px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+#content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input[type="text"] {
+  width: 70%; 
+  padding: 12px 20px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#add-btn {
+  background-color: var(--button-bg-color);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#add-btn:hover {
+  background-color: var(--button-hover-bg-color);
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 20px;
+}
+
+ul li {
+  padding: 12px 8px;
+  background-color: var(--todo-bg-color);
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s;
+}
+
+ul li:hover {
+  background-color: var(--todo-bg-hover-color);
+}
+
+.span-btns span {
+  float: right;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.span-btns span:hover {
+  transform: scale(1.2);
+}
+
+p#errorMessage {
+  color: var(--error-color);
+  padding: 10px;
+  background-color: #fdd; 
+  border-left: 5px solid var(--error-color);
+  margin-top: 20px;
+}
