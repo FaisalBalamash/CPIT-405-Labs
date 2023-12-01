@@ -1,0 +1,87 @@
+body {
+  font-size: 20px;
+}
+
+@media only screen and (max-width: 320px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+#content {
+  margin: 0 20%;
+}
+
+input[type="text"] {
+  width: 30%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+}
+
+#add-btn {
+  background-color: #0564bd;
+  color: #fff;
+  padding: 14px 10px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.add-btn:hover {
+  background-color: #044079;
+}
+
+.btn {
+  background-color: #ffffff;
+  border: 1px solid #000;
+  color: #000;
+  padding: 5px 10px;
+  margin: 8px 0;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #eee;
+}
+
+ul {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+ul li {
+  padding: 12px 8px 12px 40px;
+  list-style: none;
+  background-color: #eee;
+}
+
+ul li:nth-child(odd) {
+  background-color: #ddd;
+}
+
+ul li:hover {
+  background-color: #726e6e;
+  color: #fff;
+}
+
+ul li input {
+  margin-right: 20px;
+}
+
+span.close {
+  text-align: center;
+  padding: 1px 8px;
+  float: right;
+}
+
+.close:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.completed {
+  text-decoration: line-through;
+}
