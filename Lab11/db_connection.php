@@ -2,8 +2,8 @@
 
 // WARNING: NEVER DO THIS IN PRODUCTION
 $servername = "localhost";
-$username = "root";
-$password = "1234";
+$username = "";
+$password = "";
 $database = "todo_db";
 
 $conn = new mysqli($servername, $username, $password, $database);
