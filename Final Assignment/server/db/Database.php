@@ -5,7 +5,7 @@ class Database
     private $host = 'localhost';
     private $db_name = 'bookmarking_db';
     private $username = 'root';
-    private $password = '1234';
+    private $password = '';
     private $conn;
 
     public function connect()
